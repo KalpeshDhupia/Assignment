@@ -3,6 +3,7 @@ package com.example.assignment.views
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,9 +27,21 @@ class MainActivity : AppCompatActivity() {
         myViewModel.getData(1).observe(this, Observer {
             picList.clear()
             it.photos?.let { it1 -> picList.addAll(it1.photo as List<PhotoModel>) }
+            shimmerFrameLayout.stopShimmer()
+            shimmerFrameLayout.visibility = View.GONE
+            rv_pic.visibility = View.VISIBLE
             pictureAdapter.notifyDataSetChanged()
         })
         rv_pic.adapter=pictureAdapter
 
+    }
+    override fun onResume() {
+        super.onResume()
+        shimmerFrameLayout.startShimmer()
+    }
+
+    override fun onPause() {
+        shimmerFrameLayout.stopShimmer()
+        super.onPause()
     }
 }
