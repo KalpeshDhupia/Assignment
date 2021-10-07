@@ -26,8 +26,9 @@ class MainActivity : AppCompatActivity() {
         myViewModel.getData(1).observe(this, Observer {
             picList.clear()
             it.photos?.let { it1 -> picList.addAll(it1.photo as List<PhotoModel>) }
+            pictureAdapter.notifyDataSetChanged()
         })
         rv_pic.adapter=pictureAdapter
-        pictureAdapter.notifyDataSetChanged()
+
     }
 }
