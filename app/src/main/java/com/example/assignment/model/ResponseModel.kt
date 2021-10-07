@@ -1,4 +1,4 @@
-package com.example.assignment.pojo
+package com.example.assignment.model
 
 import com.google.gson.annotations.SerializedName
 

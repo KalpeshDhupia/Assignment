@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.assignment.R
-import com.example.assignment.pojo.PhotoModel
+import com.example.assignment.model.PhotoModel
 import kotlinx.android.synthetic.main.pic_item.view.*
 
 class PictureAdapter(val photoList: List<PhotoModel>) :

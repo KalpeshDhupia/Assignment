@@ -1,14 +1,14 @@
-package com.example.assignment
+package com.example.assignment.views
 
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.assignment.R
 import com.example.assignment.adapter.PictureAdapter
-import com.example.assignment.pojo.PhotoModel
+import com.example.assignment.model.PhotoModel
 import com.example.assignment.viewmodel.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 

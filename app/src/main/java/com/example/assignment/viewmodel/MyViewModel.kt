@@ -3,7 +3,7 @@ package com.example.assignment.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.example.assignment.pojo.ResponseModel
+import com.example.assignment.model.ResponseModel
 import com.example.assignment.repository.MyRepository
 import kotlinx.coroutines.Dispatchers
 

@@ -1,6 +1,6 @@
 package com.example.assignment.network
 
-import com.example.assignment.pojo.ResponseModel
+import com.example.assignment.model.ResponseModel
 import retrofit2.http.GET
 import retrofit2.http.Query
 

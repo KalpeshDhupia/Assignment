@@ -4,7 +4,7 @@ import com.example.assignment.network.ApiClient
 import com.example.assignment.network.Resource
 import com.example.assignment.network.ResponseHandler
 import com.example.assignment.network.RetrofitGenerator
-import com.example.assignment.pojo.ResponseModel
+import com.example.assignment.model.ResponseModel
 
 class MyRepository {
     val api: ApiClient = RetrofitGenerator.getInstance().create(ApiClient::class.java)
