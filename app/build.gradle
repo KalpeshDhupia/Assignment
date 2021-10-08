@@ -62,6 +62,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$arch_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$arch_version"
 
+    //Shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.5.0@aar'
 
 

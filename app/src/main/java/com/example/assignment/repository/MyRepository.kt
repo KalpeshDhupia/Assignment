@@ -18,7 +18,7 @@ class MyRepository {
             1,
             1,
             "kitten",
-            10,
+            100,
             data
         )
         return responseHandler.handleSuccess(result)

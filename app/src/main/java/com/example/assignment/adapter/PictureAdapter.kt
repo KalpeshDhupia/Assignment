@@ -9,7 +9,7 @@ import com.example.assignment.R
 import com.example.assignment.model.PhotoModel
 import kotlinx.android.synthetic.main.pic_item.view.*
 
-class PictureAdapter(val photoList: List<PhotoModel>) :
+class PictureAdapter(val photoList: List<PhotoModel>, ) :
     RecyclerView.Adapter<PictureAdapter.PictureViewHolder>() {
 
 
@@ -27,10 +27,12 @@ class PictureAdapter(val photoList: List<PhotoModel>) :
             .load("https://live.staticflickr.com/${result.server}/${result.id}_${result.secret}_w.jpg")
             .into(holder.itemView.ivPic);
 
+
     }
 
     override fun getItemCount(): Int {
         return photoList.size
     }
+
 
 }
