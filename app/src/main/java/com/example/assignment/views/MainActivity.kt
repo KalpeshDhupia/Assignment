@@ -1,6 +1,7 @@
 package com.example.assignment.views
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -15,7 +16,7 @@ import com.example.assignment.model.PhotoModel
 import com.example.assignment.viewmodel.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), onItemClickListener {
 
     lateinit var myViewModel: MyViewModel
     lateinit var pictureAdapter: PictureAdapter
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         myViewModel = ViewModelProviders.of(this).get(MyViewModel::class.java);
-        pictureAdapter = PictureAdapter(picList)
+        pictureAdapter = PictureAdapter(picList,this)
         rv_pic.layoutManager = LinearLayoutManager(this)
         myViewModel.getData(20).observe(this, Observer {
             picList.clear()
@@ -56,5 +57,13 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         shimmerFrameLayout.stopShimmer()
         super.onPause()
+    }
+
+    override fun onItemClick(photoModel: PhotoModel) {
+        val intent = Intent(this,ZoomActivity::class.java)
+        intent.putExtra("server", photoModel.server)
+        intent.putExtra("secret", photoModel.secret)
+        intent.putExtra("id", photoModel.id)
+        startActivity(intent)
     }
 }
