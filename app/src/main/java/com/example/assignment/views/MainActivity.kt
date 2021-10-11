@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.R
@@ -17,7 +18,7 @@ import com.example.assignment.viewmodel.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), onItemClickListener {
-
+    private var layoutManager: GridLayoutManager? = null
     lateinit var myViewModel: MyViewModel
     lateinit var pictureAdapter: PictureAdapter
     val picList: MutableList<PhotoModel> = mutableListOf()
@@ -26,9 +27,25 @@ class MainActivity : AppCompatActivity(), onItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        myViewModel = ViewModelProviders.of(this).get(MyViewModel::class.java);
-        pictureAdapter = PictureAdapter(picList,this)
-        rv_pic.layoutManager = LinearLayoutManager(this)
+
+        myViewModel = ViewModelProviders.of(this).get(MyViewModel::class.java)
+
+        layoutManager = GridLayoutManager(this, 1)
+        rv_pic.layoutManager = layoutManager
+        pictureAdapter = PictureAdapter(picList,this,layoutManager)
+        rv_pic.adapter = pictureAdapter
+      //  pictureAdapter = PictureAdapter(picList,this)
+      //  rv_pic.layoutManager = LinearLayoutManager(this)
+        btn_Change.setOnClickListener {
+            if (layoutManager?.spanCount == 1) {
+                layoutManager?.spanCount = 3
+               // item.title = "list"
+            } else {
+                layoutManager?.spanCount = 1
+                //item.title = "grid"
+            }
+            pictureAdapter?.notifyItemRangeChanged(0, pictureAdapter?.itemCount ?: 0)
+        }
         myViewModel.getData(20).observe(this, Observer {
             picList.clear()
             it.photos?.let { it1 -> picList.addAll(it1.photo as List<PhotoModel>) }

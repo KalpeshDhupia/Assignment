@@ -65,6 +65,8 @@ dependencies {
     //Shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.5.0@aar'
 
+//Single touch image view
+    //implementation 'com.github.MikeOrtiz:TouchImageView:1.4.1'
 
 
 
