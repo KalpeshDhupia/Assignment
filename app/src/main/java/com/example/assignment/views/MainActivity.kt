@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.R
 import com.example.assignment.adapter.PictureAdapter
+import com.example.assignment.databinding.ActivityMainBinding
 import com.example.assignment.model.PhotoModel
 import com.example.assignment.viewmodel.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -21,12 +23,14 @@ class MainActivity : AppCompatActivity(), onItemClickListener {
     private var layoutManager: GridLayoutManager? = null
     lateinit var myViewModel: MyViewModel
     lateinit var pictureAdapter: PictureAdapter
+    lateinit var binding: ActivityMainBinding
     val picList: MutableList<PhotoModel> = mutableListOf()
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+
 
         myViewModel = ViewModelProviders.of(this).get(MyViewModel::class.java)
 

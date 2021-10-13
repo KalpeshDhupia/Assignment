@@ -4,18 +4,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.databinding.DataBindingUtil
 import com.bumptech.glide.Glide
 import com.example.assignment.R
+import com.example.assignment.databinding.ActivityZoomBinding
 import kotlinx.android.synthetic.main.activity_zoom.*
 import kotlinx.android.synthetic.main.pic_item.view.*
 
 class ZoomActivity : AppCompatActivity() {
     lateinit var imageUrl: String
-
+    lateinit var zoomBinding: ActivityZoomBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_zoom)
+        zoomBinding = DataBindingUtil.setContentView(this, R.layout.activity_zoom)
+
         val server = intent.getStringExtra("server")
         val secret = intent.getStringExtra("secret")
         val id = intent.getStringExtra("id")
