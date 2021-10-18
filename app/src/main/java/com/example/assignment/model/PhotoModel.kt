@@ -29,4 +29,6 @@ data class PhotoModel(
 
     @field:SerializedName("isfamily")
     val isfamily: Int? = null
+
 )
+

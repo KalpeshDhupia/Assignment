@@ -2,6 +2,6 @@ package com.example.assignment.views
 
 import com.example.assignment.model.PhotoModel
 
-interface onItemClickListener {
+interface OnItemClickListener {
     fun onItemClick(photoModel: PhotoModel)
 }

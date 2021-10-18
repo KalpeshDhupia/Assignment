@@ -9,12 +9,12 @@
             type="com.example.assignment.viewmodel.MyViewModel" />
 
         <variable
-            name="photo"
+            name="photoModel"
             type="com.example.assignment.model.PhotoModel" />
 
         <variable
             name="itemClickListener"
-            type="com.example.assignment.views.onItemClickListener" />
+            type="com.example.assignment.views.OnItemClickListener" />
 
     </data>
 
@@ -28,6 +28,8 @@
 
         <ImageView
             android:id="@+id/ivPic"
+            imageUrl="@{photoModel}"
+            android:onClick="@{()->itemClickListener.onItemClick(photoModel)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop" />

@@ -10,7 +10,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.R
 import com.example.assignment.adapter.PictureAdapter
@@ -19,7 +18,7 @@ import com.example.assignment.model.PhotoModel
 import com.example.assignment.viewmodel.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), onItemClickListener {
+class MainActivity : AppCompatActivity(), OnItemClickListener {
     private var layoutManager: GridLayoutManager? = null
     lateinit var myViewModel: MyViewModel
     lateinit var pictureAdapter: PictureAdapter
@@ -36,19 +35,21 @@ class MainActivity : AppCompatActivity(), onItemClickListener {
 
         layoutManager = GridLayoutManager(this, 1)
         rv_pic.layoutManager = layoutManager
-        pictureAdapter = PictureAdapter(picList,this,layoutManager)
-        rv_pic.adapter = pictureAdapter
       //  pictureAdapter = PictureAdapter(picList,this)
       //  rv_pic.layoutManager = LinearLayoutManager(this)
+        pictureAdapter = PictureAdapter(picList,this,layoutManager)
         btn_Change.setOnClickListener {
             if (layoutManager?.spanCount == 1) {
                 layoutManager?.spanCount = 3
+                pictureAdapter.viewTypeData = "Grid"
                // item.title = "list"
             } else {
+                pictureAdapter.viewTypeData = "List"
                 layoutManager?.spanCount = 1
                 //item.title = "grid"
             }
-            pictureAdapter?.notifyItemRangeChanged(0, pictureAdapter?.itemCount ?: 0)
+
+            pictureAdapter?.notifyDataSetChanged()
         }
         myViewModel.getData(20).observe(this, Observer {
             picList.clear()

@@ -1,43 +1,74 @@
 package com.example.assignment.adapter
 
-import android.provider.ContactsContract
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.example.assignment.R
+import com.example.assignment.databinding.PicGriditemBinding
+import com.example.assignment.databinding.PicItemBinding
 import com.example.assignment.model.PhotoModel
-import com.example.assignment.views.onItemClickListener
-import kotlinx.android.synthetic.main.pic_item.view.*
+import com.example.assignment.views.OnItemClickListener
+
 
 class PictureAdapter(
     val photoList: List<PhotoModel>,
-    private val listener: onItemClickListener,
+    private val listener: OnItemClickListener,
     private val layoutManager: GridLayoutManager? = null
 ) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    enum class ViewType {
-        GRID,
-        LIST
+    lateinit var viewTypeData: String
+
+
+    class PictureViewHolder(
+        private val picItemBinding: PicItemBinding,
+        private val itemClickListener: OnItemClickListener
+    ) :
+        RecyclerView.ViewHolder(picItemBinding.root) {
+        fun onBind(photoModel: PhotoModel) {
+            picItemBinding.photoModel = photoModel
+            picItemBinding.itemClickListener = itemClickListener
+        }
     }
 
-    class PictureViewHolder(view: View) : RecyclerView.ViewHolder(view)
-    class PictureGridViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    class PictureGridViewHolder(
+        private val gridItemBinding: PicGriditemBinding,
+        private val itemClickListener: OnItemClickListener
+    ) :
+        RecyclerView.ViewHolder(gridItemBinding.root) {
+        fun onBind(photoModel: PhotoModel) {
+            gridItemBinding.photoModel = photoModel
+            gridItemBinding.itemClickListener = itemClickListener
+        }
+    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        val layoutInflater = LayoutInflater.from(parent.context)
+
+        viewTypeData = if (viewType == 1) {
+            "List"
+        } else {
+            "Grid"
+        }
         return when (viewType) {
-            ViewType.LIST.ordinal -> PictureViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.pic_item, parent, false)
+            1 -> PictureViewHolder(
+
+                DataBindingUtil.inflate(layoutInflater, R.layout.pic_item, parent, false), listener
             )
             else -> PictureGridViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.pic_griditem, parent, false)
+                DataBindingUtil.inflate(layoutInflater, R.layout.pic_griditem, parent, false),
+                listener
             )
 
         }
+        /* val layoutInflater = LayoutInflater.from(parent.context)
+         val picItemBinding: PicItemBinding =
+             DataBindingUtil.inflate(layoutInflater, R.layout.pic_item, parent, false)
+         return PictureViewHolder(picItemBinding)*/
+
     }
 
     override fun getItemCount(): Int {
@@ -45,19 +76,19 @@ class PictureAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (layoutManager?.spanCount == 1) ViewType.LIST.ordinal
-        else ViewType.GRID.ordinal
+        return if (layoutManager?.spanCount == 1) 1
+        else 2
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val result = photoList[position]
 
-        Glide.with(holder.itemView.ivPic)
-            .load("https://live.staticflickr.com/${result.server}/${result.id}_${result.secret}_w.jpg")
-            .into(holder.itemView.ivPic);
-        holder.itemView.setOnClickListener {
-            listener.onItemClick(photoList[position])
+        if (viewTypeData == "List") {
+            (holder as PictureViewHolder).onBind(result)
+        } else {
+            (holder as PictureGridViewHolder).onBind(result)
         }
+
     }
 
 
