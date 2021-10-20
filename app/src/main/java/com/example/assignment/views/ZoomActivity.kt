@@ -2,17 +2,20 @@ package com.example.assignment.views
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
+import android.os.Parcelable
+import android.util.Log
 import androidx.databinding.DataBindingUtil
-import com.bumptech.glide.Glide
+import androidx.viewpager2.widget.ViewPager2
 import com.example.assignment.R
+import com.example.assignment.adapter.ViewPagerAdapter
 import com.example.assignment.databinding.ActivityZoomBinding
-import kotlinx.android.synthetic.main.activity_zoom.*
-import kotlinx.android.synthetic.main.pic_item.view.*
+import com.example.assignment.model.PhotoModel
 
 class ZoomActivity : AppCompatActivity() {
     lateinit var imageUrl: String
+
+    private lateinit var viewPager2: ViewPager2
+
     lateinit var zoomBinding: ActivityZoomBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,9 +25,13 @@ class ZoomActivity : AppCompatActivity() {
         val server = intent.getStringExtra("server")
         val secret = intent.getStringExtra("secret")
         val id = intent.getStringExtra("id")
+        val position = intent.getIntExtra("position",1)
         imageUrl = "https://live.staticflickr.com/${server}/${id}_${secret}_w.jpg"
 
-        Glide.with(imageView)
+        val photolist   =  intent.getParcelableArrayListExtra<PhotoModel>("url")
+        Log.d("tag", "onCreate: "+ photolist)
+
+       /* Glide.with(imageView)
             .load(imageUrl)
             .into(imageView)
         val image: ImageView = findViewById(R.id.imageView)
@@ -42,10 +49,17 @@ class ZoomActivity : AppCompatActivity() {
                 this,
                 R.anim.zoom_out
             )
-            image.startAnimation(animZoomOut)
-        }
+            image.startAnimation(animZoomOut)*/
+
+        val adapter = ViewPagerAdapter(photolist as ArrayList<PhotoModel>)
+        viewPager2 = findViewById(R.id.view_pager2)
+        viewPager2.adapter = adapter
+        viewPager2.currentItem = position
+
+    }
+
+
 
 
     }
 
-}

@@ -67,9 +67,13 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$arch_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$arch_version"
 
+
+    implementation 'androidx.viewpager2:viewpager2:1.0.0-alpha01'
+
+
     //Shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.5.0@aar'
-
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 //Single touch image view
     //implementation 'com.github.MikeOrtiz:TouchImageView:1.4.1'
 

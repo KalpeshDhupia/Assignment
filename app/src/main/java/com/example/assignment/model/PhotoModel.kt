@@ -1,7 +1,10 @@
 package com.example.assignment.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class PhotoModel(
     @field:SerializedName("id")
     val id: String? = null,
@@ -28,7 +31,9 @@ data class PhotoModel(
     val isfriend: Int? = null,
 
     @field:SerializedName("isfamily")
-    val isfamily: Int? = null
+    val isfamily: Int? = null,
 
-)
+
+
+) : Parcelable
 

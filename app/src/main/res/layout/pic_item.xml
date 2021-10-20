@@ -16,6 +16,10 @@
             name="itemClickListener"
             type="com.example.assignment.views.OnItemClickListener" />
 
+        <variable
+            name="position"
+            type="int" />
+
     </data>
 
     <androidx.cardview.widget.CardView
@@ -29,7 +33,7 @@
         <ImageView
             android:id="@+id/ivPic"
             imageUrl="@{photoModel}"
-            android:onClick="@{()->itemClickListener.onItemClick(photoModel)}"
+            android:onClick="@{()->itemClickListener.onItemClick(photoModel,position)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop" />

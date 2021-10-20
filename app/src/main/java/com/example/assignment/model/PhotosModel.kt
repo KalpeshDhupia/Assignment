@@ -1,7 +1,10 @@
 package com.example.assignment.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class PhotosModel(
     @field:SerializedName("page")
     val page: Int? = null,
@@ -17,4 +20,4 @@ data class PhotosModel(
 
     @field:SerializedName("photo")
     val photo: List<PhotoModel?>? = null
-)
+) : Parcelable

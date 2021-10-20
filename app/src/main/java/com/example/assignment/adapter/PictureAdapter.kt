@@ -30,6 +30,7 @@ class PictureAdapter(
         fun onBind(photoModel: PhotoModel) {
             picItemBinding.photoModel = photoModel
             picItemBinding.itemClickListener = itemClickListener
+            picItemBinding.position = adapterPosition
         }
     }
 
@@ -41,6 +42,7 @@ class PictureAdapter(
         fun onBind(photoModel: PhotoModel) {
             gridItemBinding.photoModel = photoModel
             gridItemBinding.itemClickListener = itemClickListener
+            gridItemBinding.position = adapterPosition
         }
     }
 

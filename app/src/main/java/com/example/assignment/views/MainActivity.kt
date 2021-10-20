@@ -11,38 +11,42 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.assignment.R
 import com.example.assignment.adapter.PictureAdapter
 import com.example.assignment.databinding.ActivityMainBinding
 import com.example.assignment.model.PhotoModel
 import com.example.assignment.viewmodel.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity(), OnItemClickListener {
     private var layoutManager: GridLayoutManager? = null
     lateinit var myViewModel: MyViewModel
     lateinit var pictureAdapter: PictureAdapter
     lateinit var binding: ActivityMainBinding
-    val picList: MutableList<PhotoModel> = mutableListOf()
+    val picList: ArrayList<PhotoModel> = ArrayList()
+    var photoData: ArrayList<PhotoModel> = ArrayList()
+    lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-
+        swipeRefreshLayout = findViewById(R.id.swipeContainer)
         myViewModel = ViewModelProviders.of(this).get(MyViewModel::class.java)
 
         layoutManager = GridLayoutManager(this, 1)
         rv_pic.layoutManager = layoutManager
-      //  pictureAdapter = PictureAdapter(picList,this)
-      //  rv_pic.layoutManager = LinearLayoutManager(this)
-        pictureAdapter = PictureAdapter(picList,this,layoutManager)
+        //  pictureAdapter = PictureAdapter(picList,this)
+        //  rv_pic.layoutManager = LinearLayoutManager(this)
+        pictureAdapter = PictureAdapter(picList, this, layoutManager)
         btn_Change.setOnClickListener {
             if (layoutManager?.spanCount == 1) {
                 layoutManager?.spanCount = 3
                 pictureAdapter.viewTypeData = "Grid"
-               // item.title = "list"
+                // item.title = "list"
             } else {
                 pictureAdapter.viewTypeData = "List"
                 layoutManager?.spanCount = 1
@@ -50,6 +54,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             }
 
             pictureAdapter?.notifyDataSetChanged()
+            swipeRefreshLayout.setOnRefreshListener {
+                myViewModel.getData(20)
+            }
         }
         myViewModel.getData(20).observe(this, Observer {
             picList.clear()
@@ -58,8 +65,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             shimmerFrameLayout.visibility = View.GONE
             rv_pic.visibility = View.VISIBLE
             pictureAdapter.notifyDataSetChanged()
+
         })
         rv_pic.adapter = pictureAdapter
+        swipeRefreshLayout.isRefreshing = false
         rv_pic.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
@@ -81,11 +90,24 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         super.onPause()
     }
 
-    override fun onItemClick(photoModel: PhotoModel) {
-        val intent = Intent(this,ZoomActivity::class.java)
+    override fun onItemClick(photoModel: PhotoModel, position: Int) {
+        for (i in picList.iterator()) {
+
+            //    photoModel.list?.add ("https://live.staticflickr.com/${photoModel.server}/${photoModel.id}_${photoModel.secret}_w.jpg")
+            //   photoData.add(photoModel)
+        }
+
+
+        // photoModel.list = photoData
+        val intent = Intent(this, ZoomActivity::class.java)
+
+        Log.d("", "onItemClick: " + position)
+
         intent.putExtra("server", photoModel.server)
         intent.putExtra("secret", photoModel.secret)
         intent.putExtra("id", photoModel.id)
+        intent.putExtra("position", position)
+        intent.putParcelableArrayListExtra("url", picList)
         startActivity(intent)
     }
 }
