@@ -8,11 +8,13 @@ import com.example.assignment.repository.MyRepository
 import kotlinx.coroutines.Dispatchers
 
 class MyViewModel : ViewModel(){
-    val repository= MyRepository()
+    val repository = MyRepository()
 
-  fun getData(data:Int): LiveData<ResponseModel> {
+  fun getData(data:Int,tags : String): LiveData<ResponseModel> {
         return liveData (Dispatchers.IO) {
-            val result = repository.getData(data).data
+            val result = repository.getData(data,tags).data
+            println("api dat::::::: "+result.toString());
+
             emit(result!!)
         }
     }

@@ -5,7 +5,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView.OnQueryTextListener
+import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -20,7 +24,8 @@ import com.example.assignment.viewmodel.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlin.math.log
 
-class MainActivity : AppCompatActivity(), OnItemClickListener {
+class MainActivity : AppCompatActivity(), OnItemClickListener,
+    SwipeRefreshLayout.OnRefreshListener {
     private var layoutManager: GridLayoutManager? = null
     lateinit var myViewModel: MyViewModel
     lateinit var pictureAdapter: PictureAdapter
@@ -28,6 +33,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     val picList: ArrayList<PhotoModel> = ArrayList()
     var photoData: ArrayList<PhotoModel> = ArrayList()
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    var tag: String = "kitten"
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +48,16 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         //  pictureAdapter = PictureAdapter(picList,this)
         //  rv_pic.layoutManager = LinearLayoutManager(this)
         pictureAdapter = PictureAdapter(picList, this, layoutManager)
+        /*floatingActionButton.setOnClickListener {
+            etTag.visibility = View.VISIBLE
+            tag = etTag.text.toString()
+            floatingActionButton.setOnClickListener {
+                etTag.visibility = View.GONE
+            }
+        }*/
+
+
+
         btn_Change.setOnClickListener {
             if (layoutManager?.spanCount == 1) {
                 layoutManager?.spanCount = 3
@@ -53,32 +69,83 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 //item.title = "grid"
             }
 
-            pictureAdapter?.notifyDataSetChanged()
-            swipeRefreshLayout.setOnRefreshListener {
-                myViewModel.getData(20)
-            }
+            pictureAdapter.notifyDataSetChanged()
+
         }
-        myViewModel.getData(20).observe(this, Observer {
+
+        myViewModel.getData(20, tag).observe(this, Observer {
             picList.clear()
             it.photos?.let { it1 -> picList.addAll(it1.photo as List<PhotoModel>) }
             shimmerFrameLayout.stopShimmer()
             shimmerFrameLayout.visibility = View.GONE
             rv_pic.visibility = View.VISIBLE
             pictureAdapter.notifyDataSetChanged()
-
+            swipeRefreshLayout.isRefreshing = false
         })
         rv_pic.adapter = pictureAdapter
-        swipeRefreshLayout.isRefreshing = false
         rv_pic.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 if (dy > 5) {
-                    myViewModel.getData(dy + 10)
+                    myViewModel.getData(dy + 10, tag)
                     Log.d("msg", dy.toString())
                 }
             }
         })
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu, menu)
+        val menuItem: MenuItem = menu!!.findItem(R.id.action_search)
+      //  val searchView: androidx.appcompat.widget.SearchView = menuItem.actionView as androidx.appcompat.widget.SearchView
+        val searchView = menuItem.actionView as? SearchView
+        searchView?.queryHint = "Tyre here to search"
+
+       /* searchView?.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener,
+            SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null && query.length >= 3) {
+                    myViewModel.getData(20,query)
+
+                }
+                return false
+            }
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                return false
+            }
+
+        })*/
+
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        val searchview = item.actionView as SearchView
+
+        searchview.queryHint = "Type to Search"
+
+
+        searchview.setOnQueryTextListener(object : OnQueryTextListener,
+            SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                if (query != null && query.length >= 3) {
+                    myViewModel.getData(20,query)
+
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                return false
+            }
+
+        })
+        return super.onOptionsItemSelected(item)
+    }
+
+
 
     override fun onResume() {
         super.onResume()
@@ -109,5 +176,17 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         intent.putExtra("position", position)
         intent.putParcelableArrayListExtra("url", picList)
         startActivity(intent)
+    }
+
+    override fun onRefresh() {
+        swipeRefreshLayout.setOnRefreshListener {
+            myViewModel.getData(20, tag)
+            refreshList()
+        }
+
+    }
+
+    private fun refreshList() {
+        swipeRefreshLayout.isRefreshing = false
     }
 }
