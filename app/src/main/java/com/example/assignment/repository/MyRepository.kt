@@ -1,5 +1,6 @@
 package com.example.assignment.repository
 
+import android.util.Log
 import com.example.assignment.network.ApiClient
 import com.example.assignment.network.Resource
 import com.example.assignment.network.ResponseHandler
@@ -21,6 +22,8 @@ class MyRepository {
             100,
             data
         )
+       Log.d("res",result.toString())
+       Log.d("res",tags.toString())
         return responseHandler.handleSuccess(result)
     }
 }

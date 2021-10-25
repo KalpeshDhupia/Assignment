@@ -11,10 +11,9 @@ class MyViewModel : ViewModel(){
     val repository = MyRepository()
 
   fun getData(data:Int,tags : String): LiveData<ResponseModel> {
-        return liveData (Dispatchers.IO) {
+        return liveData(Dispatchers.IO) {
             val result = repository.getData(data,tags).data
             println("api dat::::::: "+result.toString());
-
             emit(result!!)
         }
     }

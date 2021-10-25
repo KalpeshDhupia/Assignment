@@ -97,42 +97,38 @@ class MainActivity : AppCompatActivity(), OnItemClickListener,
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
         val menuItem: MenuItem = menu!!.findItem(R.id.action_search)
-      //  val searchView: androidx.appcompat.widget.SearchView = menuItem.actionView as androidx.appcompat.widget.SearchView
+        //  val searchView: androidx.appcompat.widget.SearchView = menuItem.actionView as androidx.appcompat.widget.SearchView
         val searchView = menuItem.actionView as? SearchView
         searchView?.queryHint = "Tyre here to search"
 
-       /* searchView?.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener,
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                if (query != null && query.length >= 3) {
-                    myViewModel.getData(20,query)
-
-                }
-                return false
-            }
-
-            override fun onQueryTextChange(query: String?): Boolean {
-                return false
-            }
-
-        })*/
+        /* searchView?.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener,
+             SearchView.OnQueryTextListener {
+             override fun onQueryTextSubmit(query: String?): Boolean {
+                 if (query != null && query.length >= 3) {
+                     myViewModel.getData(20,query)
+                 }
+                 return false
+             }
+             override fun onQueryTextChange(query: String?): Boolean {
+                 return false
+             }
+         })*/
 
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        val searchview = item.actionView as SearchView
+        val searchView = item.actionView as SearchView
+        searchView.queryHint = "Type to Search"
 
-        searchview.queryHint = "Type to Search"
 
 
-        searchview.setOnQueryTextListener(object : OnQueryTextListener,
+        searchView.setOnQueryTextListener(object : OnQueryTextListener,
             SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null && query.length >= 3) {
-                    myViewModel.getData(20,query)
-
+                   observerSearch(query)
                 }
                 return true
             }
@@ -145,7 +141,16 @@ class MainActivity : AppCompatActivity(), OnItemClickListener,
         return super.onOptionsItemSelected(item)
     }
 
+    private fun observerSearch(query:String)
+    {
+        myViewModel.getData(20, query).observe(this, Observer {
+            picList.clear()
+            it.photos?.let { it1 -> picList.addAll(it1.photo as List<PhotoModel>) }
+            rv_pic.visibility = View.VISIBLE
+            pictureAdapter.notifyDataSetChanged()
+        })
 
+    }
 
     override fun onResume() {
         super.onResume()
