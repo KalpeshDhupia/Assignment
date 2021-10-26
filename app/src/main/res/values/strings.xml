@@ -2,4 +2,7 @@
     <string name="app_name">Assignment</string>
     <string name="zoomOutButtonText">Zoom Out</string>
     <string name="zoomInButtonText">Zoom In</string>
+    <string name="search">Search</string>
+    <string name="change">CHANGE</string>
+    <string name="no_data_found">No Data Found</string>
 </resources>

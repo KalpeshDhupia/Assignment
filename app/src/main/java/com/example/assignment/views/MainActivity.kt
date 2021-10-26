@@ -2,13 +2,16 @@ package com.example.assignment.views
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView.OnQueryTextListener
+import android.widget.Switch
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -22,7 +25,8 @@ import com.example.assignment.databinding.ActivityMainBinding
 import com.example.assignment.model.PhotoModel
 import com.example.assignment.viewmodel.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.math.log
+import kotlinx.coroutines.delay
+
 
 class MainActivity : AppCompatActivity(), OnItemClickListener,
     SwipeRefreshLayout.OnRefreshListener {
@@ -96,10 +100,12 @@ class MainActivity : AppCompatActivity(), OnItemClickListener,
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
-        val menuItem: MenuItem = menu!!.findItem(R.id.action_search)
+//        val menuItem: MenuItem = menu!!.findItem(R.id.action_search)
+//        val menuItem1: MenuItem = menu.findItem(R.id.app_bar_switch)
         //  val searchView: androidx.appcompat.widget.SearchView = menuItem.actionView as androidx.appcompat.widget.SearchView
-        val searchView = menuItem.actionView as? SearchView
-        searchView?.queryHint = "Tyre here to search"
+//        val searchView = menuItem.actionView as? SearchView
+//
+//        searchView?.queryHint = "Tyre here to search"
 
         /* searchView?.setOnQueryTextListener(object : androidx.appcompat.widget.SearchView.OnQueryTextListener,
              SearchView.OnQueryTextListener {
@@ -118,17 +124,16 @@ class MainActivity : AppCompatActivity(), OnItemClickListener,
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val switch = item.actionView as Switch
 
         val searchView = item.actionView as SearchView
         searchView.queryHint = "Type to Search"
-
-
-
         searchView.setOnQueryTextListener(object : OnQueryTextListener,
             SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                progress_view.visibility = View.VISIBLE
                 if (query != null && query.length >= 3) {
-                   observerSearch(query)
+                    observerSearch(query)
                 }
                 return true
             }
@@ -141,14 +146,26 @@ class MainActivity : AppCompatActivity(), OnItemClickListener,
         return super.onOptionsItemSelected(item)
     }
 
-    private fun observerSearch(query:String)
-    {
+    private fun observerSearch(query: String) {
         myViewModel.getData(20, query).observe(this, Observer {
             picList.clear()
-            it.photos?.let { it1 -> picList.addAll(it1.photo as List<PhotoModel>) }
+            progress_view.visibility = View.GONE
+            it.photos?.let { it1 ->
+                picList.addAll(it1.photo as List<PhotoModel>)
+                if (picList.isEmpty()) {
+                    rv_pic.visibility = View.GONE
+                    noDataFound.visibility = View.VISIBLE
+                } else {
+                    rv_pic.visibility = View.VISIBLE
+                    noDataFound.visibility = View.GONE
+                }
+            }
+
+
             rv_pic.visibility = View.VISIBLE
             pictureAdapter.notifyDataSetChanged()
         })
+
 
     }
 
