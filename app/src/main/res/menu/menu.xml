@@ -5,7 +5,8 @@
         android:id="@+id/app_bar_switch"
         android:title="Switch"
         app:actionLayout="@layout/switch_item"
-        app:showAsAction="always" />
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SwitchCompat" />
     <item
         android:id="@+id/action_search"
         android:title="@string/search"

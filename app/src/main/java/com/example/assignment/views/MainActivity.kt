@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView.OnQueryTextListener
 import android.widget.Switch
+import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -26,6 +27,7 @@ import com.example.assignment.model.PhotoModel
 import com.example.assignment.viewmodel.MyViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.delay
+import androidx.appcompat.widget.SwitchCompat
 
 
 class MainActivity : AppCompatActivity(), OnItemClickListener,
@@ -61,21 +63,20 @@ class MainActivity : AppCompatActivity(), OnItemClickListener,
         }*/
 
 
+        /*   btn_Change.setOnClickListener {
+               if (layoutManager?.spanCount == 1) {
+                   layoutManager?.spanCount = 3
+                   pictureAdapter.viewTypeData = "Grid"
+                   // item.title = "list"
+               } else {
+                   pictureAdapter.viewTypeData = "List"
+                   layoutManager?.spanCount = 1
+                   //item.title = "grid"
+               }
 
-        btn_Change.setOnClickListener {
-            if (layoutManager?.spanCount == 1) {
-                layoutManager?.spanCount = 3
-                pictureAdapter.viewTypeData = "Grid"
-                // item.title = "list"
-            } else {
-                pictureAdapter.viewTypeData = "List"
-                layoutManager?.spanCount = 1
-                //item.title = "grid"
-            }
+               pictureAdapter.notifyDataSetChanged()
 
-            pictureAdapter.notifyDataSetChanged()
-
-        }
+           }*/
 
         myViewModel.getData(20, tag).observe(this, Observer {
             picList.clear()
@@ -100,6 +101,18 @@ class MainActivity : AppCompatActivity(), OnItemClickListener,
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu, menu)
+        val menuItem = menu!!.findItem(R.id.app_bar_switch)
+        val switch = menuItem.getActionView() as SwitchCompat
+        switch.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                layoutManager?.spanCount = 3
+                pictureAdapter.viewTypeData = "Grid"
+            } else {
+                pictureAdapter.viewTypeData = "List"
+                layoutManager?.spanCount = 1
+            }
+            pictureAdapter.notifyDataSetChanged()
+        }
 //        val menuItem: MenuItem = menu!!.findItem(R.id.action_search)
 //        val menuItem1: MenuItem = menu.findItem(R.id.app_bar_switch)
         //  val searchView: androidx.appcompat.widget.SearchView = menuItem.actionView as androidx.appcompat.widget.SearchView
@@ -123,27 +136,33 @@ class MainActivity : AppCompatActivity(), OnItemClickListener,
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val switch = item.actionView as Switch
-
-        val searchView = item.actionView as SearchView
-        searchView.queryHint = "Type to Search"
-        searchView.setOnQueryTextListener(object : OnQueryTextListener,
-            SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                progress_view.visibility = View.VISIBLE
-                if (query != null && query.length >= 3) {
-                    observerSearch(query)
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId)
+    {
+        R.id.action_search -> {
+            val searchView = item.actionView as SearchView
+            searchView.queryHint = "Type to Search"
+            searchView.setOnQueryTextListener(object : OnQueryTextListener,
+                SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    progress_view.visibility = View.VISIBLE
+                    if (query != null && query.length >= 3) {
+                        observerSearch(query)
+                    }
+                    return true
                 }
-                return true
-            }
 
-            override fun onQueryTextChange(p0: String?): Boolean {
-                return false
-            }
+                override fun onQueryTextChange(p0: String?): Boolean {
+                    return false
+                }
 
-        })
-        return super.onOptionsItemSelected(item)
+            })
+            true
+        }
+
+        else -> {
+
+            super.onOptionsItemSelected(item)
+        }
     }
 
     private fun observerSearch(query: String) {
